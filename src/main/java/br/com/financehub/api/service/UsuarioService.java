@@ -30,10 +30,24 @@ public class UsuarioService {
         }
     }
 
+    public Optional<Usuario> listarUsuarioPorEmail(String emailUsuario){
+        return usuarioRepository.findByEmailUsuario(emailUsuario);
+    }
+
     public void deletarUsuario(Long idUsuario){
         if (usuarioRepository.existsById(idUsuario)){
             usuarioRepository.deleteById(idUsuario);
         }else {
+            throw new RuntimeException("Usuário não encontrado!");
+        }
+    }
+
+    public void deletarUsuarioByEmail(String emailUsuario) {
+        Optional<Usuario> usuarioDeletar = usuarioRepository.findByEmailUsuario(emailUsuario);
+
+        if (usuarioDeletar.isPresent()) {
+            usuarioRepository.delete(usuarioDeletar.get());
+        } else {
             throw new RuntimeException("Usuário não encontrado!");
         }
     }

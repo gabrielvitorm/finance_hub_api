@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 
@@ -31,6 +32,8 @@ public class Usuario {
     @Column(name = "senha_usuario", nullable = false)
     private String senhaUsuario;
 
-    @Column(name = "data_criacao_usuario", nullable = false)
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "data_criacao_usuario", nullable = false, updatable = false)
     private Date dataCriacaoUsuario;
 }

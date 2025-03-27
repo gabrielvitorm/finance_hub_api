@@ -4,6 +4,7 @@ import br.com.financehub.api.model.Usuario;
 import br.com.financehub.api.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,12 @@ public class UsuarioController {
         return usuarioService.listarTodosUsuarios();
     }
 
+    @GetMapping("/emails/{emailUsuario}")
+    @ResponseStatus(HttpStatus.OK)
+    public Optional<Usuario> listarUsuarioPorEmail(@PathVariable String emailUsuario) {
+        return usuarioService.listarUsuarioPorEmail(emailUsuario);
+    }
+
     @GetMapping("/{idUsuario}")
     @ResponseStatus(HttpStatus.OK)
     public Optional<Usuario> listaUsuarioPorId(@PathVariable Long idUsuario){
@@ -38,6 +45,12 @@ public class UsuarioController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletarUsuarioPorId(@PathVariable Long idUsuario){
         usuarioService.deletarUsuario(idUsuario);
+    }
+
+    @DeleteMapping("/emails/{emailUsuario}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletarUsuarioByEmail(@PathVariable String emailUsuario) {
+        usuarioService.deletarUsuarioByEmail(emailUsuario);
     }
 
     @PutMapping("/{idUsuario}")
