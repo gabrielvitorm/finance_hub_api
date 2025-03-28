@@ -3,6 +3,7 @@ package br.com.financehub.api.service;
 import br.com.financehub.api.model.Usuario;
 import br.com.financehub.api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +15,11 @@ public class UsuarioService {
     @Autowired
     UsuarioRepository usuarioRepository;
 
-    public void criarUsuario(Usuario usuario){
+    public void criarUsuario(Usuario usuario) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String senhaCriptografada = encoder.encode(usuario.getSenhaUsuario());
+
+        usuario.setSenhaUsuario(senhaCriptografada);
         usuarioRepository.save(usuario);
     }
 
@@ -60,12 +65,46 @@ public class UsuarioService {
             throw new RuntimeException("Usuário não encontrado no Banco de dados");
         }
 
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String senhaCriptografada = encoder.encode(usuario.getSenhaUsuario());
+
         Usuario usuarioEditado = usuarioBancoDeDados.get();
 
         usuarioEditado.setNomeUsuario(usuario.getNomeUsuario());
         usuarioEditado.setEmailUsuario(usuario.getEmailUsuario());
         usuarioEditado.setCpfUsuario(usuario.getCpfUsuario());
-        usuarioEditado.setSenhaUsuario(usuario.getSenhaUsuario());
+        usuarioEditado.setSenhaUsuario(senhaCriptografada);
+
+        usuarioRepository.save(usuarioEditado);
+    }
+
+    public void atualizarSenhaUsuario(String emailUsuario, Usuario usuario) {
+        Optional<Usuario> usuarioBancoDeDados = listarUsuarioPorEmail(emailUsuario);
+
+        if (usuarioBancoDeDados.isEmpty()) {
+            throw new RuntimeException("Usuário não encontrado no banco de dados");
+        }
+
+        Usuario usuarioEditado = usuarioBancoDeDados.get();
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String senhaCriptografada = encoder.encode(usuario.getSenhaUsuario());
+
+        usuarioEditado.setSenhaUsuario(senhaCriptografada);
+
+        usuarioRepository.save(usuarioEditado);
+    }
+
+    public void atualizarEmail(String emailUsuario, Usuario usuario){
+        Optional<Usuario> usuarioBancoDeDados = listarUsuarioPorEmail(emailUsuario);
+
+        if (usuarioBancoDeDados.isEmpty()){
+            throw new RuntimeException("Usuário não encontrado no banco de dados");
+        }
+
+        Usuario usuarioEditado = usuarioBancoDeDados.get();
+
+        usuarioEditado.setEmailUsuario(usuario.getEmailUsuario());
 
         usuarioRepository.save(usuarioEditado);
     }

@@ -58,4 +58,16 @@ public class UsuarioController {
     public void atualizarUsuario(@PathVariable Long idUsuario, @RequestBody Usuario usuario){
         usuarioService.atualizarUsuario(idUsuario, usuario);
     }
+
+    @PatchMapping("/atualizar-senha/{emailUsuario}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void atualizarSenhaUsuario(@PathVariable String emailUsuario, @RequestBody Usuario usuario){
+        usuarioService.atualizarSenhaUsuario(emailUsuario, usuario);
+    }
+
+    @PatchMapping("/atualizar-email/{emailUsuario}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void atualizarEmailUsuario(@PathVariable String emailUsuario, @RequestBody Usuario usuario){
+        usuarioService.atualizarEmail(emailUsuario,usuario);
+    }
 }
