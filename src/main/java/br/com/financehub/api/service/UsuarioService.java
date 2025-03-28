@@ -82,7 +82,7 @@ public class UsuarioService {
         Optional<Usuario> usuarioBancoDeDados = listarUsuarioPorEmail(emailUsuario);
 
         if (usuarioBancoDeDados.isEmpty()) {
-            throw new RuntimeException("Usuário não encontrado no banco de dados");
+            throw new RuntimeException("Usuário não encontrado!");
         }
 
         Usuario usuarioEditado = usuarioBancoDeDados.get();
@@ -99,7 +99,7 @@ public class UsuarioService {
         Optional<Usuario> usuarioBancoDeDados = listarUsuarioPorEmail(emailUsuario);
 
         if (usuarioBancoDeDados.isEmpty()){
-            throw new RuntimeException("Usuário não encontrado no banco de dados");
+            throw new RuntimeException("Usuário não encontrado!");
         }
 
         Usuario usuarioEditado = usuarioBancoDeDados.get();
@@ -107,5 +107,22 @@ public class UsuarioService {
         usuarioEditado.setEmailUsuario(usuario.getEmailUsuario());
 
         usuarioRepository.save(usuarioEditado);
+    }
+
+    public Usuario autenticarUsuario(String emailUsuario, String senhaUsuario){
+        Optional<Usuario> usuarioBancoDeDados = listarUsuarioPorEmail(emailUsuario);
+
+        if (usuarioBancoDeDados.isEmpty()){
+            throw new RuntimeException("Usuário não encontrado!");
+        }
+
+        Usuario usuarioAutenticado = usuarioBancoDeDados.get();
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+        if (!encoder.matches(senhaUsuario, usuarioAutenticado.getSenhaUsuario())){
+            throw new RuntimeException("Senha inválida!");
+        }
+
+        return usuarioAutenticado;
     }
 }

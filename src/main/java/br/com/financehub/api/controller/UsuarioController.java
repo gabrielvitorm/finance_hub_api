@@ -1,5 +1,6 @@
 package br.com.financehub.api.controller;
 
+import br.com.financehub.api.dto.LoginDTO;
 import br.com.financehub.api.model.Usuario;
 import br.com.financehub.api.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,12 @@ public class UsuarioController {
     @ResponseStatus(HttpStatus.CREATED)
     public void criarUsuario(@RequestBody Usuario usuario){
         usuarioService.criarUsuario(usuario);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Usuario> login(@RequestBody LoginDTO loginDTO){
+        Usuario usuarioLogin = usuarioService.autenticarUsuario(loginDTO.getEmailUsuario(), loginDTO.getSenhaUsuario());
+        return ResponseEntity.ok(usuarioLogin);
     }
 
     @GetMapping
